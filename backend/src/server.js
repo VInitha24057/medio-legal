@@ -24,7 +24,10 @@ const { cacheMiddleware } = require('./middleware/cache');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -186,11 +189,8 @@ app.get('/', (req, res) => {
 
     server.listen(PORT, '0.0.0.0', () => {
       console.log(`\n🟢 ========================================`);
-      console.log(`   Server running`);
+      console.log(`   Server running on Railway`);
       console.log(`   Port: ${PORT}`);
-      console.log(`   📚 API Base URL: http://localhost:${PORT}/api`);
-      console.log(`   🌐 Frontend:    http://localhost:5173`);
-      console.log(`   📁 Upload Dir: http://localhost:${PORT}/uploads`);
       console.log(`   ✅ ========================================\n`);
     });
 

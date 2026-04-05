@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 
 const connectDB = async (retries = 5, delay = 3000) => {
-  const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/medico';
+  let mongoUri = process.env.MONGODB_URI;
+  
+  if (!mongoUri) {
+    mongoUri = process.env.MONGO_URL || 'mongodb://localhost:27017/medico';
+  }
+  
+  const isProduction = process.env.NODE_ENV === 'production';
   let currentDelay = delay;
   
   for (let attempt = 1; attempt <= retries; attempt++) {
