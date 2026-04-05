@@ -53,8 +53,12 @@ const startServer = async () => {
     console.log(`   Port: ${PORT}`);
     console.log(`   Node Env: ${process.env.NODE_ENV || 'development'}`);
     
-    await connectDB();
-    console.log('✅ Database connected successfully');
+    try {
+      await connectDB();
+      console.log('✅ Database connected');
+    } catch (err) {
+      console.warn('⚠️ Database not connected - starting server anyway');
+    }
 
     app.use('/api/auth', authRoutes);
     app.use('/api/cases', caseRoutes);
@@ -66,9 +70,9 @@ const startServer = async () => {
     app.use('/api', hashRoutes);
     app.use('/api', recordsRoutes);
     app.use('/api/ai-index', aiIndexRoutes);
-app.use('/api', unifiedApiRoutes);
+    app.use('/api', unifiedApiRoutes);
 
-app.get('/', (req, res) => {
+    app.get('/', (req, res) => {
       res.status(200).json({
         success: true,
         message: 'Welcome to Medico Legal System API',
