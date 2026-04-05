@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
 
 const connectDB = async (retries = 3, delay = 5000) => {
-  let mongoUri = process.env.MONGODB_URI || process.env.MONGO_URL || process.env.MONGO || process.env.MONGODB_URI;
+  let mongoUri = process.env.MONGODB_URI || process.env.MONGO_URL || process.env.MONGO;
   
-  if (!mongoUri) {
-    mongoUri = 'mongodb://localhost:27017/medico';
+  const isValidMongoUri = mongoUri && (mongoUri.startsWith('mongodb://') || mongoUri.startsWith('mongodb+srv://'));
+  
+  if (!isValidMongoUri) {
+    console.log('📦 MongoDB: No valid connection string - starting without database');
+    return null;
   }
   
-  console.log('📦 MongoDB:', mongoUri.includes('@') ? 'connection string set' : 'not configured');
+  console.log('📦 MongoDB: connection string detected');
   
   let currentDelay = delay;
   
