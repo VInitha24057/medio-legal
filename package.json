@@ -1,0 +1,16 @@
+{
+  "name": "smart-medico-legal-system",
+  "version": "1.0.0",
+  "description": "Smart Medico-Legal Record Management System using AI Indexing and Blockchain Hashing",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "ai": "cd ai-service && python main.py",
+    "build": "cd frontend && npm run build"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+build/
+.env
+uploads/
+.DS_Store
+nul
+backend/src/nul
+Medico-legal/.git

@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: medico-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - medico-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: medico123
+    networks:
+      - medico-network
+
+  backend:
+    build: ./backend
+    container_name: medico-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGODB_URI=mongodb://admin:medico123@mongodb:27017/medico?authSource=admin
+      - JWT_SECRET=medico_secret_key_2024_secure
+      - AI_SERVICE_URL=http://ai-service:5001
+    depends_on:
+      - mongodb
+      - ai-service
+    volumes:
+      - ./backend/uploads:/app/uploads
+    networks:
+      - medico-network
+
+  ai-service:
+    build: ./ai-service
+    container_name: medico-ai-service
+    ports:
+      - "5001:5001"
+    networks:
+      - medico-network
+
+  frontend:
+    build: ./frontend
+    container_name: medico-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+      - VITE_AI_SERVICE_URL=http://localhost:5001
+    depends_on:
+      - backend
+    networks:
+      - medico-network
+
+volumes:
+  medico-data:
+
+networks:
+  medico-network:
+    driver: bridge
